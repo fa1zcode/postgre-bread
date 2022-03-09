@@ -37,7 +37,8 @@ module.exports = function (db) {
     }
 
     db.query(sql, (err, raw) => {
-      const jumlahHalaman = Math.ceil(Number(raw.total) / limit);
+      const jumlahHalaman = Math.ceil(Number(raw.rows[0].total) / limit);
+      console.log(raw.rows)
       sql = `select * from todo`;
       if (params.length > 0) {
         sql += ` where ${params.join(" and ")}`;
