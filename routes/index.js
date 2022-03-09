@@ -60,5 +60,66 @@ module.exports = function (db) {
     });
   });
 
+  router.get("/add", function (req, res) {
+    res.render("add");
+  });
+
+  router.post("/add", function (req, res) {
+    // query binding = use (?) to prevent hack via sql injection
+    db.query(
+      `insert into todo (stringdata, integerdata, floatdata, datedata, booleandata) values ($1,$2,$3,$4,$5)`,
+      [
+        req.body.string,
+        parseInt(req.body.integer),
+        parseFloat(req.body.float),
+        req.body.date,
+        JSON.parse(req.body.boolean),
+      ],
+      (err, raws) => {
+        if (err) return res.send(err);
+        console.log(req, res);
+        res.redirect("/");
+      }
+    );
+  });
+
+  router.get("/delete/:id", function (req, res) {
+    const id = Number(req.params.id);
+    db.query("delete from todo where id = $1 ", [id], (err, raws) => {
+      if (err) return res.send(err);
+      console.log(raws);
+      res.redirect("/");
+    });
+  });
+
+  router.get("/edit/:id", function (req, res) {
+    const id = Number(req.params.id);
+    db.query("select * from todo where id = $1", [id], (err, raws) => {
+      if (err) return res.send(err);
+      console.log(raws.rows[0]);
+      res.render("edit", { data: raws.rows[0] });
+    });
+  });
+
+  router.post("/edit/:id", function (req, res) {
+    const id = Number(req.params.id);
+    db.query(
+      "update todo set stringdata = $1, integerdata = $2, floatdata = $3, datedata = $4, booleandata = $5 where id = $6",
+      [
+        req.body.string,
+        parseInt(req.body.integer),
+        parseFloat(req.body.float),
+        req.body.date,
+        JSON.parse(req.body.boolean),
+        id,
+      ],
+      (err, row) => {
+        if (err) return res.send(err);
+        res.redirect("/");
+      }
+    );
+    console.log(req.query)
+  });
+
   return router;
 };
