@@ -34,6 +34,7 @@
                 id="string"
                 name="string"
                 placeholder="String"
+                value="<%= query.string %>"
               />
             </div>
           </div>
@@ -47,6 +48,7 @@
                 id="integer"
                 name="integer"
                 placeholder="Integer"
+                value="<%= query.integer %>"
               />
             </div>
           </div>
@@ -61,6 +63,7 @@
                 id="float"
                 name="float"
                 placeholder="Float"
+                value="<%= query.float %>"
               />
             </div>
           </div>
@@ -77,6 +80,7 @@
                 onfocus="(this.type='date')"
                 onblur="(this.type='text')"
                 id="date"
+                value="<%= query.startDate ? moment(query.startDate).format('DD-MMMM-YYYY') : '' %>"
               />
               <h2 style="font-size: medium; padding: inherit">To</h2>
               <input
@@ -88,6 +92,7 @@
                 onfocus="(this.type='date')"
                 onblur="(this.type='text')"
                 id="date"
+                value="<%= query.endDate ? moment(query.endDate).format('DD-MMMM-YYYY') : '' %>"
               />
             </div>
           </div>
@@ -101,9 +106,9 @@
                 class="form-select"
                 aria-label="Default select example"
               >
-                <option value="">Choose a Boolean ..</option>
-                <option value="false">false</option>
-                <option value="true">true</option>
+                <option value="">Choose the Boolean ..</option>
+                <option value="false" <%= query.boolean == 'false' ? 'selected' : '' %>>false</option>
+                <option value="true" <%= query.boolean == 'true' ? 'selected' : '' %>>true</option>
               </select>
             </div>
           </div>
@@ -118,7 +123,8 @@
       <thead>
         <tr>
           <th>
-            <a href=" <%=url.replace(`sortBy=${query.sortBy}` , `sortBy=id`).replace(`sortMode=${query.sortMode}` , `sortMode=${query.sortMode == 'asc' ? 'desc' : 'asc'}`)%> "
+            <a
+              href=" <%=url.replace(`sortBy=${query.sortBy}` , `sortBy=id`).replace(`sortMode=${query.sortMode}` , `sortMode=${query.sortMode == 'asc' ? 'desc' : 'asc'}`)%> "
               ><i class="fa-solid fa-sort"></i
             ></a>
             ID
@@ -138,9 +144,7 @@
           <td><%= item.stringdata %></td>
           <td><%= item.integerdata%></td>
           <td><%= item.floatdata%></td>
-          <td>
-            <%= item.datedata ? `'${item.datedata}'`.slice(4,16) : 'kosong' %>
-          </td>
+          <td><%= item.datedata ? moment(item.datedata).format('DD-MMMM-YYYY') : 'kosong' %></td>
           <td><%= item.booleandata ? 'true' : 'false' %></td>
           <td>
             <a href="/edit/<%= item.id%>" class="btn btn-success">Edit</a>

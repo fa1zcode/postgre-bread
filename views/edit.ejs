@@ -78,17 +78,19 @@
               class="form-control"
               id="date"
               name="date"
-              value="<%= data.datedata %>"
+              value="<%= moment(data.datedata).format('YYYY-MM-DD') %>"
             />
           </div>
         </div>
+
+        <%= console.log(moment(data.datedata).format('DD-MMMM-YYYY')) %>
 
         <div class="row">
           <label for="boolean" class="col-sm-2">Boolean</label>
           <div class="col-sm-10">
             <select name="boolean" id="" class="form-select" aria-label="Default select example">
-              <option value="false">false</option>
-              <option value="true" <%= data.boolean ? 'selected' : '' %>>true</option>
+              <option value="false" >false</option>
+              <option value="true" <%= data.booleandata  ? 'selected' : '' %>>true</option>
             </select>
           </div>
         </div>

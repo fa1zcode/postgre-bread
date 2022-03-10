@@ -1,6 +1,8 @@
 var express = require("express");
 const { rows } = require("pg/lib/defaults");
 var router = express.Router();
+var moment = require('moment'); // require
+moment().format(); 
 
 module.exports = function (db) {
   /* GET home page. */
@@ -45,10 +47,10 @@ module.exports = function (db) {
         sql += ` where ${params.join(" and ")}`;
       }
 
-      const sortMode = req.query.sortMode ? req.query.sortMode : 'asc' 
-      const sortBy = req.query.sortBy ? req.query.sortBy : 'id'
+      const sortMode = req.query.sortMode ? req.query.sortMode : "asc";
+      const sortBy = req.query.sortBy ? req.query.sortBy : "id";
 
-      sql += ` order by ${sortBy} ${sortMode}`
+      sql += ` order by ${sortBy} ${sortMode}`;
 
       sql += ` limit $1 offset $2`;
 
@@ -63,6 +65,7 @@ module.exports = function (db) {
           jumlahHalaman,
           query: req.query,
           url,
+          moment,
         });
       });
     });
@@ -80,16 +83,15 @@ module.exports = function (db) {
         req.body.string,
         parseInt(req.body.integer),
         parseFloat(req.body.float),
-        req.body.date,
+        req.body.date ? req.body.date : null,
         JSON.parse(req.body.boolean),
       ],
       (err, raws) => {
         if (err) return res.send(err);
-        console.log(req, res);
-        console.log(raws)
+        console.log(err)
         res.redirect("/");
       }
-      );
+    );
   });
 
   router.get("/delete/:id", function (req, res) {
@@ -106,7 +108,7 @@ module.exports = function (db) {
     db.query("select * from todo where id = $1", [id], (err, raws) => {
       if (err) return res.send(err);
       console.log(raws.rows[0]);
-      res.render("edit", { data: raws.rows[0] });
+      res.render("edit", { data: raws.rows[0], moment });
     });
   });
 
@@ -127,7 +129,6 @@ module.exports = function (db) {
         res.redirect("/");
       }
     );
-    console.log(req.query)
   });
 
   return router;
