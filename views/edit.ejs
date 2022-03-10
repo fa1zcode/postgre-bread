@@ -78,12 +78,10 @@
               class="form-control"
               id="date"
               name="date"
-              value="<%= moment(data.datedata).format('YYYY-MM-DD') %>"
+              value="<%= data.datedata == null ? 'kosong' : moment(data.datedata).format('YYYY-MM-DD') %>"
             />
           </div>
         </div>
-
-        <%= console.log(moment(data.datedata).format('DD-MMMM-YYYY')) %>
 
         <div class="row">
           <label for="boolean" class="col-sm-2">Boolean</label>

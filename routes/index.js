@@ -120,7 +120,7 @@ module.exports = function (db) {
         req.body.string,
         parseInt(req.body.integer),
         parseFloat(req.body.float),
-        req.body.date,
+        req.body.date ? req.body.date : null,
         JSON.parse(req.body.boolean),
         id,
       ],
