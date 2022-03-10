@@ -11,6 +11,7 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+    <link href="/fontawesome/css/all.css" rel="stylesheet" />
   </head>
 
   <body>
@@ -19,6 +20,8 @@
       <form action="" method="get">
         <div class="card-header">
           <input type="hidden" name="page" value="1" />
+          <input type="hidden" name="sortBy" value="id" />
+          <input type="hidden" name="sortMode" value="asc" />
           <h2>Pencarian</h2>
         </div>
         <div class="card-body">
@@ -114,8 +117,13 @@
     <table border="1" class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>String</th>
+          <th>
+            <a href=" <%=url.replace(`sortBy=${query.sortBy}` , `sortBy=id`).replace(`sortMode=${query.sortMode}` , `sortMode=${query.sortMode == 'asc' ? 'desc' : 'asc'}`)%> "
+              ><i class="fa-solid fa-sort"></i
+            ></a>
+            ID
+          </th>
+          <th><i class="fa-solid fa-sort"></i> String</th>
           <th>Integer</th>
           <th>Float</th>
           <th>Date</th>
@@ -130,7 +138,9 @@
           <td><%= item.stringdata %></td>
           <td><%= item.integerdata%></td>
           <td><%= item.floatdata%></td>
-          <td><%= item.datedata ? item.datedata : 'kosong' %></td>
+          <td>
+            <%= item.datedata ? `'${item.datedata}'`.slice(4,16) : 'kosong' %>
+          </td>
           <td><%= item.booleandata ? 'true' : 'false' %></td>
           <td>
             <a href="/edit/<%= item.id%>" class="btn btn-success">Edit</a>

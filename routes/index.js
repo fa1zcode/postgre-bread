@@ -5,7 +5,7 @@ var router = express.Router();
 module.exports = function (db) {
   /* GET home page. */
   router.get("/", function (req, res) {
-    const url = req.url == "/" ? "/?page=1" : req.url;
+    const url = req.url == "/" ? "/?page=1&sortBy=id&sortMode=asc" : req.url;
 
     let params = [];
 
@@ -13,10 +13,10 @@ module.exports = function (db) {
       params.push(`stringdata ilike '%${req.query.string}%'`);
     }
     if (req.query.integer) {
-      params.push(`integerdata = ${req.query.integer}`);
+      params.push(`integerdata = ${parseInt(req.query.integer)}`);
     }
     if (req.query.float) {
-      params.push(`floatdata like '${req.query.float}' `);
+      params.push(`floatdata = '${req.query.float}' `);
     }
     if (req.query.startDate && req.query.endDate) {
       params.push(
@@ -35,20 +35,27 @@ module.exports = function (db) {
     if (params.length > 0) {
       sql += ` where ${params.join(" and ")}`;
     }
+    console.log(sql);
 
     db.query(sql, (err, raw) => {
       const jumlahHalaman = Math.ceil(Number(raw.rows[0].total) / limit);
-      console.log(raw.rows)
+      //console.log(raw.rows)
       sql = `select * from todo`;
       if (params.length > 0) {
         sql += ` where ${params.join(" and ")}`;
       }
+
+      const sortMode = req.query.sortMode ? req.query.sortMode : 'asc' 
+      const sortBy = req.query.sortBy ? req.query.sortBy : 'id'
+
+      sql += ` order by ${sortBy} ${sortMode}`
+
       sql += ` limit $1 offset $2`;
 
       console.log(sql);
 
       db.query(sql, [limit, offset], (err, raws) => {
-        console.log(raws.rows);
+        console.log(raws);
         if (err) return res.send(err);
         res.render("list", {
           data: raws.rows,
@@ -79,9 +86,10 @@ module.exports = function (db) {
       (err, raws) => {
         if (err) return res.send(err);
         console.log(req, res);
+        console.log(raws)
         res.redirect("/");
       }
-    );
+      );
   });
 
   router.get("/delete/:id", function (req, res) {
